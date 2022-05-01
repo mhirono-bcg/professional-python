@@ -8,31 +8,35 @@ class JankenSimulator:
         self.computer_choice = None
         self.human_choice = None
 
-    def get_human_choice():
+    def get_human_choice(self):
         choice_number = int(input("「グー」か「チョキ」か「パー」を番号で選んでください: "))
-        return OPTIONS[choice_number - 1]
+        self.human_choice = OPTIONS[choice_number - 1]
 
-    def get_computer_choice():
-        return random.choice(OPTIONS)
+    def get_computer_choice(self):
+        self.computer_choice = random.choice(OPTIONS)
 
-    def print_result(computer_choice, human_choice):
+    def print_result(self):
         beat_mapper = {"グー": "チョキ", "パー": "グー", "チョキ": "パー"}
 
-        human_beat = beat_mapper[human_choice]
+        human_beat = beat_mapper[self.human_choice]
 
-        print(f"コンピュータが選んだのは{computer_choice}です")
-        print(f"あなたが選んだのは{human_choice}です")
+        print(f"コンピュータが選んだのは{self.computer_choice}です")
+        print(f"あなたが選んだのは{self.human_choice}です")
 
-        if computer_choice == human_choice:
+        if self.computer_choice == self.human_choice:
             print("引き分けです！")
 
-        elif computer_choice == human_beat:
-            print(f"おめでとうございます！ あなたの出した{human_choice}の勝ちです。")
+        elif self.computer_choice == human_beat:
+            print(f"おめでとうございます！ あなたの出した{self.human_choice}の勝ちです。")
 
         else:
-            print(f"残念でした！ コンピュータの出した{computer_choice}の勝ちです。")
+            print(f"残念でした！ コンピュータの出した{self.computer_choice}の勝ちです。")
+
+    def simulate(self):
+        self.get_computer_choice()
+        self.get_human_choice()
+        self.print_result()
 
 
-computer_choice = get_computer_choice()
-human_choice = get_human_choice()
-print_result(computer_choice, human_choice)
+janken = JankenSimulator()
+janken.simulate()
