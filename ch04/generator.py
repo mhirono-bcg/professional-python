@@ -11,3 +11,11 @@ def range(*args):
     while current < stop:
         yield current
         current += 1
+
+
+def squares(items: list[int]):
+    for item in items:
+        yield item ** 2
+
+
+[i for i in squares([1, 2, 3, 4, 5])]
