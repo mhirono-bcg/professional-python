@@ -11,5 +11,5 @@ class ShoppingCart:
     def remove_product(self, product, quantity=1):
         sku = product.generate_sku()
         self.products[sku]["quantity"] -= quantity
-        if self.products[sku]["quantity"] == 0:
+        if self.products[sku]["quantity"] <= 0:
             del self.products[sku]
