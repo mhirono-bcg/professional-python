@@ -49,6 +49,16 @@ def get_bookmark_id_for_deletion():
     return get_user_input("Specify the bookmark ID for deletion")
 
 
+def get_github_import_options():
+    return {
+        "github_username": get_user_input("Github User Name"),
+        "preserve_timestamps": get_user_input(
+            "Do you want to keep the timestamp [Y/n]", required=False
+        )
+        in {"Y", "y", None},
+    }
+
+
 def loop():
     clear_screen()
     options = OrderedDict(
@@ -64,6 +74,11 @@ def loop():
                 "Delete",
                 commands.DeleteBookmarkCommand(),
                 prep_call=get_bookmark_id_for_deletion,
+            ),
+            "G": Option(
+                "Import Github Stars",
+                commands.ImportGitHubStarsCommand(),
+                prep_call=get_github_import_options,
             ),
             "Q": Option("Quit", commands.QuitCommand()),
         }
