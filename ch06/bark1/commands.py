@@ -80,3 +80,9 @@ class ImportGitHubStarsCommand:
                     self._extract_bookmark_info(repo), timestamp=timestamp
                 )
         return f"{bookmarks_imported} Bookmarks are now imported!!!"
+
+
+class EditBookmarkCommand:
+    def execute(self, data):
+        db.update("bookmarks", {"id": data["id"]}, data["update"])
+        return "Update the Bookmarks!!!"

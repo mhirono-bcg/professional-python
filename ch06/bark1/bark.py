@@ -59,6 +59,16 @@ def get_github_import_options():
     }
 
 
+def get_new_bookmark_info():
+    bookmark_id = get_user_input("編集対象のIDを入力してください")
+    field = get_user_input("編集項目を指定してください（「タイトル」「URL」「メモ」のいずれか）")
+    new_value = get_user_input(f"{field}の新しい値")
+    return {
+        "id": bookmark_id,
+        "update": {field: new_value},
+    }
+
+
 def loop():
     clear_screen()
     options = OrderedDict(
@@ -74,6 +84,9 @@ def loop():
                 "Delete",
                 commands.DeleteBookmarkCommand(),
                 prep_call=get_bookmark_id_for_deletion,
+            ),
+            "E": Option(
+                "編集", commands.EditBookmarkCommand(), prep_call=get_new_bookmark_info
             ),
             "G": Option(
                 "Import Github Stars",
