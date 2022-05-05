@@ -2,12 +2,19 @@ import datetime
 import sys
 import requests
 from database import DatabaseManager
+from abc import ABC, abstractmethod
 
 db = DatabaseManager("bookmarks.db")
 
 
-class CreateBookmarksTableCommand:
-    def execute(self):
+class Command(ABC):
+    @abstractmethod
+    def execute(self, data):
+        raise NotImplementedError("コマンドは必ずメソッドexecuteを実装してください")
+
+
+class CreateBookmarksTableCommand(Command):
+    def execute(self, data=None):
         db.create_table(
             "bookmarks",
             columns={
@@ -20,33 +27,33 @@ class CreateBookmarksTableCommand:
         )
 
 
-class AddBookmarkCommand:
+class AddBookmarkCommand(Command):
     def execute(self, data, timestamp=None):
         data["date_added"] = timestamp or datetime.datetime.utcnow().isoformat()
         db.add("bookmarks", data)
         return "Successfully added a new bookmark!!!"
 
 
-class ListBookmarksCommand:
+class ListBookmarksCommand(Command):
     def __init__(self, order_by="date_added"):
         self.order_by = order_by
 
-    def execute(self, criteria):
+    def execute(self, data=None):
         return db.select("bookmarks", self.order_by).fetchall()
 
 
-class DeleteBookmarkCommand:
+class DeleteBookmarkCommand(Command):
     def execute(self, data):
         db.delete("bookmarks", {"id": data})
         return "Successfully deleted the bookmark!!!"
 
 
-class QuitCommand:
-    def execute(self):
+class QuitCommand(Command):
+    def execute(self, data=None):
         sys.exit()
 
 
-class ImportGitHubStarsCommand:
+class ImportGitHubStarsCommand(Command):
     def _extract_bookmark_info(self, repo):
         return {
             "title": repo["name"],
@@ -82,7 +89,7 @@ class ImportGitHubStarsCommand:
         return f"{bookmarks_imported} Bookmarks are now imported!!!"
 
 
-class EditBookmarkCommand:
+class EditBookmarkCommand(Command):
     def execute(self, data):
         db.update("bookmarks", {"id": data["id"]}, data["update"])
         return "Update the Bookmarks!!!"
