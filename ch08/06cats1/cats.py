@@ -5,17 +5,17 @@ class BigCat:
 
 class Lion(BigCat):
     def eats(self):
-        return ["ヌー"]
+        return super().eats() + ["ヌー"]
 
 
 class Tiger(BigCat):
     def eats(self):
-        return ["水牛"]
+        return super().eats() + ["水牛"]
 
 
 class Liger(Lion, Tiger):
     def eats(self):
-        return super.eats() + ["ウサギ", "牛", "豚", "鶏"]
+        return super().eats() + ["ウサギ", "牛", "豚", "鶏"]
 
 
 if __name__ == "__main__":
