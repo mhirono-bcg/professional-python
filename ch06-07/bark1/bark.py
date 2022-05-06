@@ -69,12 +69,19 @@ def get_new_bookmark_info():
     }
 
 
+def format_bookmark(bookmark):
+    return "\t".join(str(field) if field else "" for field in bookmark)
+
+
 def loop():
     clear_screen()
     options = OrderedDict(
         {
             "A": Option(
-                "Add", commands.AddBookmarkCommand(), prep_call=get_new_bookmark_data
+                "Add",
+                commands.AddBookmarkCommand(),
+                prep_call=get_new_bookmark_data,
+                success_message="ブックマークを追加しました",
             ),
             "B": Option("Show by Added Date", commands.ListBookmarksCommand()),
             "T": Option(
@@ -105,10 +112,11 @@ def loop():
 
 
 class Option:
-    def __init__(self, name, command, prep_call=None):
+    def __init__(self, name, command, prep_call=None, success_message="{result}"):
         self.name = name
         self.command = command
         self.prep_call = prep_call
+        self.success_message = success_message
 
     def _handle_message(self, message):
         if isinstance(message, list):
@@ -118,8 +126,18 @@ class Option:
 
     def choose(self):
         data = self.prep_call() if self.prep_call else None
-        message = self.command.execute(data)
-        self._handle_message(message)
+        success, result = self.command.execute(data)
+
+        formatted_result = ""
+
+        if isinstance(result, list):
+            for bookmark in result:
+                formatted_result += "\n" + format_bookmark(bookmark)
+            else:
+                formatted_result = result
+
+            if success:
+                print(self.success_message.format(result=formatted_result))
 
     def __str__(self):
         return self.name

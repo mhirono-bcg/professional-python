@@ -31,7 +31,7 @@ class AddBookmarkCommand(Command):
     def execute(self, data, timestamp=None):
         data["date_added"] = timestamp or datetime.datetime.utcnow().isoformat()
         db.add("bookmarks", data)
-        return "Successfully added a new bookmark!!!"
+        return True, None
 
 
 class ListBookmarksCommand(Command):
@@ -39,7 +39,7 @@ class ListBookmarksCommand(Command):
         self.order_by = order_by
 
     def execute(self, data=None):
-        return db.select("bookmarks", self.order_by).fetchall()
+        return True, db.select("bookmarks", self.order_by).fetchall()
 
 
 class DeleteBookmarkCommand(Command):
